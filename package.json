@@ -1,0 +1,13 @@
+{
+  "name": "devquickstart",
+  "version": "1.0.0",
+  "description": "List of npx commands to quickly develop some template code for web development",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "./bin.js"
+}
