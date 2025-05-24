@@ -97,37 +97,31 @@ if (args.length === 0) {
         let existing = "";
         try {
           existing = await fs.readFile(filePath, "utf-8");
+          const variables = {
+            NEXTAUTH_URL: "your-auth-url",
+            NEXTAUTH_SECRET: "your-secret",
+            GOOGLE_CLIENTID: "your-client-id",
+            GOOGLE_SECRET: "your-secret",
+          };
+          let additions = "";
+          for (const [key, value] of Object.entries(variables)) {
+            if (!existing.includes(key)) {
+              additions += `${key}=${value}\n`;
+            }
+          }
+          if (additions) {
+            await fs.appendFile(filePath, `\n${additions}`);
+            console.log("✅ Missing environment variables added.");
+          } else {
+            console.log("✅ All environment variables added successfully.");
+          }
         } catch {
           await fs.writeFile(
             filePath,
             "NEXTAUTH_URL=\nNEXTAUTH_SECRET=\nGOOGLE_CLIENTID=\nGOOGLE_SECRET="
           );
+          console.log("✅ All environment variables added successfully.");
         }
-        if (!existing.includes("NEXTAUTH_URL")) {
-          await fs.writeFile(
-            filePath,
-            existing + "NEXTAUTH_URL=your-auth-url\n"
-          );
-        }
-        if (!existing.includes("NEXTAUTH_SECRET")) {
-          await fs.writeFile(
-            filePath,
-            existing + "NEXTAUTH_SECRET=your-secret\n"
-          );
-        }
-        if (!existing.includes("GOOGLE_CLIENTID=\n")) {
-          await fs.writeFile(
-            filePath,
-            existing + "GOOGLE_CLIENTID=your-client-id\n"
-          );
-        }
-        if (!existing.includes("GOOGLE_SECRET")) {
-          await fs.writeFile(
-            filePath,
-            existing + "GOOGLE_SECRET=your-secret\n"
-          );
-        }
-        console.log(`Environment variables successfully added`);
       } catch (e) {
         console.error(`Error: ${e}`);
         process.exit(1);
