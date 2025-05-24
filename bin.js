@@ -52,6 +52,88 @@ if (args.length === 0) {
         console.error(`Error: ${e}`);
         process.exit(1);
       }
+    } else if (args[1] === "nextauth") {
+      // Install nextauth
+      try {
+        console.log(`Installing nextauth...`);
+        execSync(`npm install next-auth`, { stdio: "inherit" });
+      } catch (err) {
+        console.error(`❌ Failed to install nextauth:`, err.message);
+        process.exit(1);
+      }
+      // Adding SessionProvider file
+      try {
+        const url =
+          "https://raw.githubusercontent.com/Hajurian/devquickstart/refs/heads/main/components/SessionProvider.tsx";
+        const outputDirectory = "./src/components/functional";
+        const outputPath = path.join(outputDirectory, "SessionProvider.tsx");
+        const res = await fetch(url);
+        const code = await res.text();
+        await fs.mkdir(outputDirectory, { recursive: true });
+        await fs.writeFile(outputPath, code);
+
+        console.log(`SessionProvider.tsx added successfully.`);
+      } catch (e) {
+        console.error(`Error: ${e}`);
+      }
+      // Adding auth api route file
+      try {
+        const url =
+          "https://raw.githubusercontent.com/Hajurian/devquickstart/refs/heads/main/components/nextauthroute.ts";
+        const outputDirectory = "./src/app/api/auth/[...nextauth]";
+        const outputPath = path.join(outputDirectory, "route.ts");
+        const res = await fetch(url);
+        const code = await res.text();
+        await fs.mkdir(outputDirectory, { recursive: true });
+        await fs.writeFile(outputPath, code);
+
+        console.log(`next auth route.ts added successfully.`);
+      } catch (e) {
+        console.error(`Error: ${e}`);
+      }
+      // Add mongoclientid to .env file
+      try {
+        const filePath = "./.env";
+        let existing = "";
+        try {
+          existing = await fs.readFile(filePath, "utf-8");
+        } catch {
+          await fs.writeFile(
+            filePath,
+            "NEXTAUTH_URL=\nNEXTAUTH_SECRET=\nGOOGLE_CLIENTID=\nGOOGLE_SECRET="
+          );
+        }
+        if (!existing.includes("NEXTAUTH_URL")) {
+          await fs.writeFile(
+            filePath,
+            existing + "NEXTAUTH_URL=your-auth-url\n"
+          );
+        }
+        if (!existing.includes("NEXTAUTH_SECRET")) {
+          await fs.writeFile(
+            filePath,
+            existing + "NEXTAUTH_SECRET=your-secret\n"
+          );
+        }
+        if (!existing.includes("GOOGLE_CLIENTID=\n")) {
+          await fs.writeFile(
+            filePath,
+            existing + "GOOGLE_CLIENTID=your-client-id\n"
+          );
+        }
+        if (!existing.includes("GOOGLE_SECRET")) {
+          await fs.writeFile(
+            filePath,
+            existing + "GOOGLE_SECRET=your-secret\n"
+          );
+        }
+        console.log(`Environment variables successfully added`);
+      } catch (e) {
+        console.error(`Error: ${e}`);
+        process.exit(1);
+      }
+    } else {
+      console.log("Please enter a valid library to quickstart");
     }
   } else {
     // User enters command npx command with first arg not being add.
