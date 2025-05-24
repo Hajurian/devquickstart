@@ -18,17 +18,36 @@ if (args.length === 0) {
         process.exit(1);
       }
       // Adding mongoDB file
-      const url =
-        "https://raw.githubusercontent.com/Hajurian/devquickstart/refs/heads/main/components/mongodb.ts";
-      const outputDirectory = "./src/lib";
-      const outputPath = path.join(outputDirectory, "mongodb.ts");
       try {
+        const url =
+          "https://raw.githubusercontent.com/Hajurian/devquickstart/refs/heads/main/components/mongodb.ts";
+        const outputDirectory = "./src/lib";
+        const outputPath = path.join(outputDirectory, "mongodb.ts");
         const res = await fetch(url);
         const code = await res.text();
         await fs.mkdir(outputDirectory, { recursive: true });
         await fs.writeFile(outputPath, code);
 
         console.log(`mongodb.ts added successfully.`);
+      } catch (e) {
+        console.error(`Error: ${e}`);
+      }
+      // Add mongoclientid to .env file
+      try {
+        const filePath = "./.env";
+        let existing = "";
+        try {
+          existing = await fs.readFile(filePath, "utf-8");
+        } catch {
+          await fs.writeFile(filePath, "MONGOCLIENTID=");
+        }
+        if (!existing.includes("MONGOCLIENTID")) {
+          await fs.writeFile(
+            filePath,
+            existing + "MONGOCLIENTID=your-client-id-here\n"
+          );
+        }
+        console.log(`MONGOCLIENTID successfully added`);
       } catch (e) {
         console.error(`Error: ${e}`);
         process.exit(1);
