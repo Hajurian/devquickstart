@@ -24,5 +24,6 @@ npx devquickstart add mongodb
 or
 
 ```bash
+npm install next-auth
 npx devquickstart add nextauth
 ```

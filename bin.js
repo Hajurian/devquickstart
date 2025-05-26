@@ -53,14 +53,14 @@ if (args.length === 0) {
         process.exit(1);
       }
     } else if (args[1] === "nextauth") {
-      // Install nextauth
-      try {
-        console.log(`Installing nextauth...`);
-        execSync(`npm install next-auth`, { stdio: "inherit" });
-      } catch (err) {
-        console.error(`❌ Failed to install nextauth:`, err.message);
-        process.exit(1);
-      }
+      // Install nextauth (has dependency issues)
+      // try {
+      //   console.log(`Installing nextauth...`);
+      //   execSync(`npm install next-auth`, { stdio: "inherit" });
+      // } catch (err) {
+      //   console.error(`❌ Failed to install nextauth:`, err.message);
+      //   process.exit(1);
+      // }
       // Adding SessionProvider file
       try {
         const url =
